@@ -1,677 +1,1404 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-  />
-  <meta name="theme-color" content="#0d141b" />
-  <title>AG Postür</title>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0d141b">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<title>AG Postür</title>
 
-    body {
-      margin: 0;
-      background: #0d141b;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+<style>
 
-    .app {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 14px;
-    }
+*{box-sizing:border-box}
 
-    .header {
-      margin-bottom: 14px;
-    }
+body{
+margin:0;
+background:#0d141b;
+color:white;
+font-family:Arial,sans-serif;
+}
 
-    .logo {
-      font-size: 28px;
-      font-weight: 800;
-    }
+.app{
+max-width:720px;
+margin:auto;
+padding:14px;
+}
 
-    .sub {
-      color: #91a0ab;
-      font-size: 14px;
-      margin-top: 4px;
-    }
+.logo{
+font-size:28px;
+font-weight:800;
+}
 
-    .card {
-      background: #18232d;
-      border-radius: 18px;
-      padding: 14px;
-      margin-bottom: 14px;
-    }
+.sub{
+color:#91a0ab;
+font-size:14px;
+margin:4px 0 15px;
+}
 
-    label {
-      display: block;
-      color: #a6b1ba;
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
+.card{
+background:#18232d;
+border-radius:18px;
+padding:14px;
+margin-bottom:14px;
+}
 
-    input {
-      width: 100%;
-      height: 48px;
-      border: none;
-      border-radius: 11px;
-      padding: 0 12px;
-      font-size: 16px;
-    }
+label{
+display:block;
+font-size:13px;
+color:#a6b1ba;
+margin-bottom:6px;
+}
 
-    button {
-      width: 100%;
-      min-height: 50px;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      margin-top: 10px;
-      cursor: pointer;
-    }
+input{
+width:100%;
+height:48px;
+border:0;
+border-radius:11px;
+padding:0 12px;
+font-size:16px;
+}
 
-    .primary {
-      background: white;
-      color: #101820;
-    }
+button{
+width:100%;
+min-height:50px;
+border:0;
+border-radius:12px;
+font-size:16px;
+font-weight:700;
+margin-top:10px;
+}
 
-    .dark {
-      background: #293946;
-      color: white;
-    }
+.primary{
+background:white;
+color:#101820;
+}
 
-    .successBtn {
-      background: #1f7a45;
-      color: white;
-    }
+.dark{
+background:#293946;
+color:white;
+}
 
-    .disabledBtn {
-      background: #26313a;
-      color: #6f7d88;
-      cursor: not-allowed;
-    }
+.green{
+background:#197645;
+color:white;
+}
 
-    .mode-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      margin-top: 12px;
-    }
+.red{
+background:#54282b;
+color:white;
+}
 
-    .mode-btn {
-      margin-top: 0;
-      background: #293946;
-      color: white;
-    }
+.disabled{
+background:#26313a;
+color:#71808b;
+}
 
-    .mode-btn.active {
-      background: white;
-      color: #101820;
-    }
+.hidden{
+display:none!important;
+}
 
-    .mode-btn.done::after {
-      content: " ✓";
-    }
 
-    .camera-wrap {
-      position: relative;
-      width: 100%;
-      background: black;
-      border-radius: 16px;
-      overflow: hidden;
-    }
+/* MOD */
 
-    video,
-    canvas {
-      width: 100%;
-      display: block;
-    }
+.modeGrid{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:8px;
+margin-top:12px;
+}
 
-    video {
-      background: black;
-      object-fit: cover;
-    }
+.mode{
+margin:0;
+background:#293946;
+color:white;
+}
 
-    .overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
+.mode.active{
+background:white;
+color:#101820;
+}
 
-    .center-line {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      width: 2px;
-      background: rgba(47,255,108,.95);
-      transform: translateX(-50%);
-    }
+.mode.done::after{
+content:" ✓";
+}
 
-    .grid-line-v,
-    .grid-line-h {
-      position: absolute;
-      background: rgba(255,255,255,.12);
-    }
 
-    .grid-line-v {
-      top: 0;
-      bottom: 0;
-      width: 1px;
-    }
+/* CAMERA */
 
-    .grid-line-h {
-      left: 0;
-      right: 0;
-      height: 1px;
-    }
+.cameraWrap{
+position:relative;
+width:100%;
+background:black;
+border-radius:16px;
+overflow:hidden;
+}
 
-    .guide-line {
-      position: absolute;
-      height: 2px;
-      background: rgba(255,210,30,.95);
-    }
+video{
+width:100%;
+display:block;
+background:black;
+}
 
-    .guide-head {
-      position: absolute;
-      border: 2px solid rgba(255,255,255,.8);
-      border-radius: 50%;
-    }
+.overlay{
+position:absolute;
+inset:0;
+pointer-events:none;
+}
 
-    .body-left,
-    .body-right {
-      position: absolute;
-      border-left: 2px solid rgba(255,255,255,.38);
-      height: 65%;
-      top: 20%;
-    }
+.center{
+position:absolute;
+top:0;
+bottom:0;
+left:50%;
+width:2px;
+background:#36ff73;
+}
 
-    .status {
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 12px;
-      background: #22313d;
-      text-align: center;
-      font-size: 14px;
-      line-height: 1.4;
-    }
+.gridV,.gridH{
+position:absolute;
+background:rgba(255,255,255,.12);
+}
 
-    .status-ok {
-      background: #173424;
-      color: #cdf7d7;
-    }
+.gridV{
+top:0;
+bottom:0;
+width:1px;
+}
 
-    .status-warn {
-      background: #4a3b1d;
-      color: #ffe9a9;
-    }
+.gridH{
+left:0;
+right:0;
+height:1px;
+}
 
-    .hidden {
-      display: none;
-    }
+.guide{
+position:absolute;
+height:2px;
+background:#ffd21e;
+}
 
-    .preview-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
+.head{
+position:absolute;
+border:2px solid rgba(255,255,255,.8);
+border-radius:50%;
+}
 
-    .shots {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-    }
+.status{
+margin-top:10px;
+padding:12px;
+background:#173424;
+color:#cdf7d7;
+border-radius:12px;
+text-align:center;
+font-size:14px;
+}
 
-    .shot-box {
-      background: #101820;
-      border-radius: 12px;
-      padding: 8px;
-      text-align: center;
-      min-width: 0;
-    }
 
-    .shot-box img {
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      object-fit: cover;
-      border-radius: 9px;
-      background: #000;
-    }
+/* PREVIEW */
 
-    .shot-label {
-      margin-top: 6px;
-      font-size: 12px;
-      color: #a9b4bd;
-    }
+canvas{
+width:100%;
+height:auto;
+display:block;
+border-radius:14px;
+touch-action:none;
+background:black;
+}
 
-    .help {
-      font-size: 13px;
-      color: #9da9b4;
-      line-height: 1.5;
-      margin-top: 10px;
-    }
-  </style>
+.shots{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:8px;
+}
+
+.shot{
+background:#101820;
+padding:7px;
+border-radius:12px;
+text-align:center;
+}
+
+.shot img{
+width:100%;
+aspect-ratio:3/4;
+object-fit:cover;
+border-radius:8px;
+background:#05080a;
+}
+
+.shot div{
+font-size:12px;
+color:#aab5be;
+margin-top:5px;
+}
+
+
+/* ANALİZ */
+
+.analysisHeader{
+text-align:center;
+margin-bottom:12px;
+}
+
+.analysisTitle{
+font-size:20px;
+font-weight:800;
+}
+
+.analysisSub{
+font-size:13px;
+color:#94a3ae;
+margin-top:4px;
+}
+
+.step{
+background:#22313d;
+border-radius:12px;
+padding:12px;
+text-align:center;
+margin-bottom:12px;
+}
+
+.stepSmall{
+font-size:11px;
+color:#94a3ae;
+}
+
+.stepName{
+font-size:18px;
+font-weight:800;
+margin-top:4px;
+}
+
+.resultGrid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
+margin-top:12px;
+}
+
+.result{
+background:#101820;
+border-radius:12px;
+padding:12px;
+}
+
+.resultLabel{
+font-size:11px;
+color:#8f9da8;
+}
+
+.resultValue{
+font-size:23px;
+font-weight:800;
+margin-top:4px;
+}
+
+.resultText{
+font-size:11px;
+color:#aab5bd;
+margin-top:3px;
+}
+
+.info{
+font-size:12px;
+line-height:1.5;
+color:#9eabb5;
+margin-top:10px;
+}
+
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-  <div class="header">
-    <div class="logo">AG POSTÜR</div>
-    <div class="sub">3 Yönlü Canlı Çekim • PWA V2</div>
-  </div>
+<div class="logo">AG POSTÜR</div>
+<div class="sub">Postür Analizi • PWA V3</div>
 
-  <div class="card">
-    <label>Danışan</label>
 
-    <input
-      id="danisan"
-      type="text"
-      placeholder="Danışanın adını yaz"
-    />
+<!-- ÇEKİM -->
 
-    <div class="mode-grid">
-      <button class="mode-btn active" data-mode="on">ÖN</button>
-      <button class="mode-btn" data-mode="yan">YAN</button>
-      <button class="mode-btn" data-mode="arka">ARKA</button>
-    </div>
+<div id="captureScreen">
 
-    <button id="kameraAc" class="primary">
-      📷 Canlı Kamerayı Aç
-    </button>
+<div class="card">
 
-    <div class="help">
-      Her görünüş için ayrı fotoğraf çekeceğiz. Çekilen fotoğraf otomatik olarak o moda kaydedilir.
-    </div>
-  </div>
+<label>Danışan</label>
 
-  <div id="cameraCard" class="card hidden">
+<input id="danisan"
+placeholder="Danışanın adını yaz">
 
-    <div class="camera-wrap">
+<div class="modeGrid">
 
-      <video
-        id="video"
-        autoplay
-        playsinline
-        muted>
-      </video>
+<button class="mode active"
+data-mode="on">ÖN</button>
 
-      <div id="overlay" class="overlay"></div>
+<button class="mode"
+data-mode="yan">YAN</button>
 
-    </div>
-
-    <div id="status" class="status">
-      Kamera hazırlanıyor...
-    </div>
-
-    <button id="fotoCek" class="primary">
-      FOTOĞRAFI ÇEK
-    </button>
-
-    <button id="kameraKapat" class="dark">
-      Kamerayı Kapat
-    </button>
-
-  </div>
-
-  <div id="previewCard" class="card hidden">
-
-    <div class="preview-title">
-      Çekilen Görüntü
-    </div>
-
-    <canvas id="canvas"></canvas>
-
-    <button id="kullan" class="successBtn">
-      Bu Fotoğrafı Kullan
-    </button>
-
-    <button id="yeniden" class="dark">
-      Yeniden Çek
-    </button>
-
-  </div>
-
-  <div class="card">
-
-    <div class="preview-title">
-      Çekimler
-    </div>
-
-    <div class="shots">
-
-      <div class="shot-box">
-        <img id="shotOn" alt="Ön çekim" />
-        <div class="shot-label">ÖN</div>
-      </div>
-
-      <div class="shot-box">
-        <img id="shotYan" alt="Yan çekim" />
-        <div class="shot-label">YAN</div>
-      </div>
-
-      <div class="shot-box">
-        <img id="shotArka" alt="Arka çekim" />
-        <div class="shot-label">ARKA</div>
-      </div>
-
-    </div>
-
-    <button
-      id="analizeGec"
-      class="disabledBtn"
-      disabled>
-      3 FOTOĞRAF TAMAMLANINCA ANALİZE GEÇ
-    </button>
-
-  </div>
+<button class="mode"
+data-mode="arka">ARKA</button>
 
 </div>
 
+<button id="cameraOpen"
+class="primary">
+📷 CANLI KAMERAYA GEÇ
+</button>
+
+</div>
+
+
+<div id="cameraCard"
+class="card hidden">
+
+<div class="cameraWrap">
+
+<video id="video"
+autoplay
+playsinline
+muted></video>
+
+<div id="overlay"
+class="overlay"></div>
+
+</div>
+
+<div id="cameraStatus"
+class="status">
+Kamera hazır
+</div>
+
+<button id="takePhoto"
+class="primary">
+FOTOĞRAFI ÇEK
+</button>
+
+<button id="closeCamera"
+class="dark">
+Kamerayı Kapat
+</button>
+
+</div>
+
+
+<div id="previewCard"
+class="card hidden">
+
+<canvas id="previewCanvas"></canvas>
+
+<button id="usePhoto"
+class="green">
+BU FOTOĞRAFI KULLAN
+</button>
+
+<button id="retake"
+class="dark">
+Yeniden Çek
+</button>
+
+</div>
+
+
+<div class="card">
+
+<div style="font-weight:800;margin-bottom:10px">
+Çekimler
+</div>
+
+<div class="shots">
+
+<div class="shot">
+<img id="imgOn">
+<div>ÖN</div>
+</div>
+
+<div class="shot">
+<img id="imgYan">
+<div>YAN</div>
+</div>
+
+<div class="shot">
+<img id="imgArka">
+<div>ARKA</div>
+</div>
+
+</div>
+
+<button id="startAnalysis"
+class="disabled"
+disabled>
+3 FOTOĞRAF TAMAMLANINCA ANALİZE GEÇ
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ANALİZ -->
+
+<div id="analysisScreen"
+class="hidden">
+
+<div class="card">
+
+<div class="analysisHeader">
+
+<div class="analysisTitle">
+ÖN POSTÜR ANALİZİ
+</div>
+
+<div id="analysisPerson"
+class="analysisSub"></div>
+
+</div>
+
+
+<div class="step">
+
+<div class="stepSmall">
+İŞARETLE / DÜZELT
+</div>
+
+<div id="stepName"
+class="stepName">
+1 / 8 • Sol Göz
+</div>
+
+</div>
+
+
+<canvas id="analysisCanvas"></canvas>
+
+
+<div class="info">
+Noktaları sırayla yerleştir. Yerleştirdiğin mavi noktayı
+parmağınla tutup sürükleyerek daha sonra düzeltebilirsin.
+</div>
+
+
+<button id="undoPoint"
+class="dark">
+↩ Son Noktayı Geri Al
+</button>
+
+<button id="resetPoints"
+class="red">
+Tüm Noktaları Sıfırla
+</button>
+
+
+<div id="results"
+class="hidden">
+
+<div class="resultGrid">
+
+<div class="result">
+<div class="resultLabel">BAŞ HATTI</div>
+<div id="headValue"
+class="resultValue">0°</div>
+<div id="headText"
+class="resultText"></div>
+</div>
+
+<div class="result">
+<div class="resultLabel">OMUZ HATTI</div>
+<div id="shoulderValue"
+class="resultValue">0°</div>
+<div id="shoulderText"
+class="resultText"></div>
+</div>
+
+<div class="result">
+<div class="resultLabel">PELVİS HATTI</div>
+<div id="pelvisValue"
+class="resultValue">0°</div>
+<div id="pelvisText"
+class="resultText"></div>
+</div>
+
+<div class="result">
+<div class="resultLabel">DİZ HATTI</div>
+<div id="kneeValue"
+class="resultValue">0°</div>
+<div id="kneeText"
+class="resultText"></div>
+</div>
+
+</div>
+
+<button id="analysisDone"
+class="green">
+ÖN ANALİZİ TAMAMLA
+</button>
+
+</div>
+
+
+<button id="backCapture"
+class="dark">
+← Çekimlere Dön
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
 <script>
-  const video = document.getElementById("video");
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
 
-  const cameraCard = document.getElementById("cameraCard");
-  const previewCard = document.getElementById("previewCard");
-  const statusBox = document.getElementById("status");
-  const overlay = document.getElementById("overlay");
-  const analyzeButton = document.getElementById("analizeGec");
+/* ==============================
+   TEMEL
+================================ */
 
-  let stream = null;
-  let currentMode = "on";
-  let pendingPhoto = null;
+const video =
+document.getElementById("video");
 
-  const photos = {
-    on: null,
-    yan: null,
-    arka: null
-  };
+const previewCanvas =
+document.getElementById("previewCanvas");
 
-  const labels = {
-    on: "Ön",
-    yan: "Yan",
-    arka: "Arka"
-  };
+const pctx =
+previewCanvas.getContext("2d");
 
-  document.querySelectorAll(".mode-btn").forEach(button => {
-    button.addEventListener("click", () => {
-      document.querySelectorAll(".mode-btn").forEach(btn => {
-        btn.classList.remove("active");
-      });
+const analysisCanvas =
+document.getElementById("analysisCanvas");
 
-      button.classList.add("active");
-      currentMode = button.dataset.mode;
+const actx =
+analysisCanvas.getContext("2d");
 
-      if (stream) {
-        drawOverlay();
-      }
-    });
-  });
+let stream=null;
+let currentMode="on";
+let pending=null;
 
-  function drawOverlay() {
-    overlay.innerHTML = "";
+const photos={
+on:null,
+yan:null,
+arka:null
+};
 
-    addGrid();
+const modeNames={
+on:"Ön",
+yan:"Yan",
+arka:"Arka"
+};
 
-    const center = document.createElement("div");
-    center.className = "center-line";
-    overlay.appendChild(center);
 
-    if (currentMode === "on" || currentMode === "arka") {
-      drawFrontBackGuide();
-    } else {
-      drawSideGuide();
-    }
-  }
+/* ==============================
+   MOD
+================================ */
 
-  function addGrid() {
-    [20, 40, 60, 80].forEach(percent => {
-      const v = document.createElement("div");
-      v.className = "grid-line-v";
-      v.style.left = percent + "%";
-      overlay.appendChild(v);
+document.querySelectorAll(".mode")
+.forEach(btn=>{
 
-      const h = document.createElement("div");
-      h.className = "grid-line-h";
-      h.style.top = percent + "%";
-      overlay.appendChild(h);
-    });
-  }
+btn.onclick=()=>{
 
-  function addLine(top, left, right) {
-    const line = document.createElement("div");
-    line.className = "guide-line";
-    line.style.top = top + "%";
-    line.style.left = left + "%";
-    line.style.right = right + "%";
-    overlay.appendChild(line);
-  }
+document.querySelectorAll(".mode")
+.forEach(x=>x.classList.remove("active"));
 
-  function addHead(top, left, right, height) {
-    const head = document.createElement("div");
-    head.className = "guide-head";
-    head.style.top = top + "%";
-    head.style.left = left + "%";
-    head.style.right = right + "%";
-    head.style.height = height + "%";
-    overlay.appendChild(head);
-  }
+btn.classList.add("active");
 
-  function drawFrontBackGuide() {
-    addHead(6, 37, 37, 12);
-    addLine(27, 22, 22);
-    addLine(49, 31, 31);
-    addLine(72, 30, 30);
-    addLine(94, 12, 12);
+currentMode=btn.dataset.mode;
 
-    const left = document.createElement("div");
-    left.className = "body-left";
-    left.style.left = "38%";
-    overlay.appendChild(left);
+if(stream) drawCameraOverlay();
 
-    const right = document.createElement("div");
-    right.className = "body-right";
-    right.style.left = "62%";
-    overlay.appendChild(right);
-  }
+};
 
-  function drawSideGuide() {
-    addHead(6, 41, 41, 12);
-    addLine(28, 40, 40);
-    addLine(50, 40, 40);
-    addLine(72, 40, 40);
-    addLine(94, 35, 35);
-  }
+});
 
-  async function kamerayiAc() {
-    const danisan = document.getElementById("danisan").value.trim();
 
-    if (!danisan) {
-      alert("Önce danışan adını yaz.");
-      return;
-    }
+/* ==============================
+   KAMERA
+================================ */
 
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      alert("Bu tarayıcı canlı kamera erişimini desteklemiyor.");
-      return;
-    }
+async function openCamera(){
 
-    try {
-      kamerayiKapat();
+const name=
+document.getElementById("danisan")
+.value.trim();
 
-      stream = await navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: {
-          facingMode: { ideal: "environment" },
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
-        }
-      });
+if(!name){
 
-      video.srcObject = stream;
-      await video.play();
+alert("Önce danışan adını yaz.");
 
-      drawOverlay();
+return;
 
-      cameraCard.classList.remove("hidden");
-      previewCard.classList.add("hidden");
+}
 
-      statusBox.className = "status status-ok";
-      statusBox.innerText =
-        "✓ " + labels[currentMode] + " çekim modu — danışanı rehbere hizala.";
-    }
+try{
 
-    catch (error) {
-      console.error(error);
+closeCamera();
 
-      cameraCard.classList.remove("hidden");
+stream=
+await navigator.mediaDevices.getUserMedia({
 
-      statusBox.className = "status status-warn";
-      statusBox.innerText =
-        "Kamera açılamadı: " +
-        (error.name || "Bilinmeyen hata") +
-        " — " +
-        (error.message || "");
-    }
-  }
+audio:false,
 
-  function kamerayiKapat() {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      stream = null;
-    }
+video:{
+facingMode:{ideal:"environment"},
+width:{ideal:1920},
+height:{ideal:1080}
+}
 
-    video.srcObject = null;
-  }
+});
 
-  document.getElementById("kameraAc").addEventListener("click", kamerayiAc);
+video.srcObject=stream;
 
-  document.getElementById("kameraKapat").addEventListener("click", () => {
-    kamerayiKapat();
-    cameraCard.classList.add("hidden");
-  });
+await video.play();
 
-  document.getElementById("fotoCek").addEventListener("click", () => {
-    if (!video.videoWidth || !video.videoHeight) {
-      alert("Kamera henüz hazır değil.");
-      return;
-    }
+drawCameraOverlay();
 
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+document.getElementById("cameraCard")
+.classList.remove("hidden");
 
-    ctx.drawImage(
-      video,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
+document.getElementById("previewCard")
+.classList.add("hidden");
 
-    pendingPhoto = canvas.toDataURL("image/jpeg", 0.9);
+document.getElementById("cameraStatus")
+.innerText=
+"✓ "+modeNames[currentMode]+
+" çekim • Danışanı rehbere hizala";
 
-    previewCard.classList.remove("hidden");
-    cameraCard.classList.add("hidden");
+}catch(e){
 
-    kamerayiKapat();
-  });
+alert(
+"Kamera açılamadı: "+
+e.name
+);
 
-  document.getElementById("yeniden").addEventListener("click", kamerayiAc);
+}
 
-  document.getElementById("kullan").addEventListener("click", () => {
-    if (!pendingPhoto) {
-      alert("Önce fotoğraf çek.");
-      return;
-    }
+}
 
-    photos[currentMode] = pendingPhoto;
 
-    if (currentMode === "on") {
-      document.getElementById("shotOn").src = pendingPhoto;
-    }
+function closeCamera(){
 
-    if (currentMode === "yan") {
-      document.getElementById("shotYan").src = pendingPhoto;
-    }
+if(stream){
 
-    if (currentMode === "arka") {
-      document.getElementById("shotArka").src = pendingPhoto;
-    }
+stream.getTracks()
+.forEach(t=>t.stop());
 
-    markModeDone(currentMode);
+stream=null;
 
-    pendingPhoto = null;
-    previewCard.classList.add("hidden");
+}
 
-    autoNextMode();
-    updateAnalyzeButton();
-  });
+video.srcObject=null;
 
-  function markModeDone(mode) {
-    const button = document.querySelector('.mode-btn[data-mode="' + mode + '"]');
+}
 
-    if (button) {
-      button.classList.add("done");
-    }
-  }
 
-  function autoNextMode() {
-    let nextMode = null;
+document.getElementById("cameraOpen")
+.onclick=openCamera;
 
-    if (!photos.on) {
-      nextMode = "on";
-    } else if (!photos.yan) {
-      nextMode = "yan";
-    } else if (!photos.arka) {
-      nextMode = "arka";
-    }
+document.getElementById("closeCamera")
+.onclick=()=>{
 
-    if (!nextMode) return;
+closeCamera();
 
-    currentMode = nextMode;
+document.getElementById("cameraCard")
+.classList.add("hidden");
 
-    document.querySelectorAll(".mode-btn").forEach(btn => {
-      btn.classList.toggle(
-        "active",
-        btn.dataset.mode === nextMode
-      );
-    });
-  }
+};
 
-  function updateAnalyzeButton() {
-    const tamam =
-      photos.on &&
-      photos.yan &&
-      photos.arka;
 
-    if (tamam) {
-      analyzeButton.disabled = false;
-      analyzeButton.className = "successBtn";
-      analyzeButton.innerText = "ANALİZE GEÇ";
-    } else {
-      analyzeButton.disabled = true;
-      analyzeButton.className = "disabledBtn";
-      analyzeButton.innerText = "3 FOTOĞRAF TAMAMLANINCA ANALİZE GEÇ";
-    }
-  }
+/* ==============================
+   CANLI REHBER
+================================ */
 
-  analyzeButton.addEventListener("click", () => {
-    alert(
-      "3 çekim tamamlandı ✓\n\n" +
-      "Sonraki sürümde burada anatomik nokta işaretleme ve açı hesaplama ekranına geçeceğiz."
-    );
-  });
+function drawCameraOverlay(){
 
-  window.addEventListener("pagehide", kamerayiKapat);
+const o=
+document.getElementById("overlay");
+
+o.innerHTML="";
+
+[20,40,60,80].forEach(v=>{
+
+const a=document.createElement("div");
+a.className="gridV";
+a.style.left=v+"%";
+o.appendChild(a);
+
+const b=document.createElement("div");
+b.className="gridH";
+b.style.top=v+"%";
+o.appendChild(b);
+
+});
+
+const c=document.createElement("div");
+c.className="center";
+o.appendChild(c);
+
+
+if(currentMode==="yan"){
+
+addHead(o,41,41,6,12);
+
+addGuide(o,28,40,40);
+addGuide(o,50,40,40);
+addGuide(o,72,40,40);
+addGuide(o,94,35,35);
+
+}else{
+
+addHead(o,37,37,6,12);
+
+addGuide(o,27,22,22);
+addGuide(o,49,31,31);
+addGuide(o,72,30,30);
+addGuide(o,94,12,12);
+
+}
+
+}
+
+
+function addGuide(parent,top,left,right){
+
+const d=document.createElement("div");
+
+d.className="guide";
+d.style.top=top+"%";
+d.style.left=left+"%";
+d.style.right=right+"%";
+
+parent.appendChild(d);
+
+}
+
+
+function addHead(parent,left,right,top,height){
+
+const d=document.createElement("div");
+
+d.className="head";
+d.style.left=left+"%";
+d.style.right=right+"%";
+d.style.top=top+"%";
+d.style.height=height+"%";
+
+parent.appendChild(d);
+
+}
+
+
+/* ==============================
+   FOTOĞRAF
+================================ */
+
+document.getElementById("takePhoto")
+.onclick=()=>{
+
+if(!video.videoWidth)return;
+
+previewCanvas.width=
+video.videoWidth;
+
+previewCanvas.height=
+video.videoHeight;
+
+pctx.drawImage(
+video,
+0,0,
+previewCanvas.width,
+previewCanvas.height
+);
+
+pending=
+previewCanvas.toDataURL(
+"image/jpeg",
+.88
+);
+
+closeCamera();
+
+document.getElementById("cameraCard")
+.classList.add("hidden");
+
+document.getElementById("previewCard")
+.classList.remove("hidden");
+
+};
+
+
+document.getElementById("retake")
+.onclick=openCamera;
+
+
+document.getElementById("usePhoto")
+.onclick=()=>{
+
+photos[currentMode]=pending;
+
+document.getElementById(
+currentMode==="on"
+?"imgOn"
+:currentMode==="yan"
+?"imgYan"
+:"imgArka"
+).src=pending;
+
+document.querySelector(
+'.mode[data-mode="'+currentMode+'"]'
+).classList.add("done");
+
+pending=null;
+
+document.getElementById("previewCard")
+.classList.add("hidden");
+
+nextMode();
+
+checkComplete();
+
+};
+
+
+function nextMode(){
+
+let next=null;
+
+if(!photos.on)next="on";
+else if(!photos.yan)next="yan";
+else if(!photos.arka)next="arka";
+
+if(!next)return;
+
+currentMode=next;
+
+document.querySelectorAll(".mode")
+.forEach(btn=>{
+
+btn.classList.toggle(
+"active",
+btn.dataset.mode===next
+);
+
+});
+
+}
+
+
+function checkComplete(){
+
+if(
+photos.on &&
+photos.yan &&
+photos.arka
+){
+
+const b=
+document.getElementById("startAnalysis");
+
+b.disabled=false;
+b.className="green";
+b.innerText="ANALİZE GEÇ";
+
+}
+
+}
+
+
+/* ==============================
+   ANALİZ BAŞLANGIÇ
+================================ */
+
+const pointNames=[
+
+"Sol Göz Merkezi",
+"Sağ Göz Merkezi",
+
+"Sol Omuz Ucu",
+"Sağ Omuz Ucu",
+
+"Sol ASIS / Ön Kalça",
+"Sağ ASIS / Ön Kalça",
+
+"Sol Diz Kapağı",
+"Sağ Diz Kapağı"
+
+];
+
+let analysisImage=
+new Image();
+
+let points=[];
+
+let dragging=-1;
+
+
+document.getElementById("startAnalysis")
+.onclick=()=>{
+
+document.getElementById("captureScreen")
+.classList.add("hidden");
+
+document.getElementById("analysisScreen")
+.classList.remove("hidden");
+
+document.getElementById("analysisPerson")
+.innerText=
+document.getElementById("danisan").value;
+
+analysisImage=new Image();
+
+analysisImage.onload=()=>{
+
+const maxW=1200;
+
+let w=analysisImage.naturalWidth;
+let h=analysisImage.naturalHeight;
+
+if(w>maxW){
+
+const r=maxW/w;
+
+w=maxW;
+h*=r;
+
+}
+
+analysisCanvas.width=Math.round(w);
+analysisCanvas.height=Math.round(h);
+
+points=[];
+
+drawAnalysis();
+
+updateStep();
+
+};
+
+analysisImage.src=photos.on;
+
+};
+
+
+/* ==============================
+   ANALİZ ÇİZİMİ
+================================ */
+
+function drawAnalysis(){
+
+actx.clearRect(
+0,0,
+analysisCanvas.width,
+analysisCanvas.height
+);
+
+actx.drawImage(
+analysisImage,
+0,0,
+analysisCanvas.width,
+analysisCanvas.height
+);
+
+
+/* merkez referansı */
+
+actx.save();
+
+actx.strokeStyle=
+"rgba(50,255,110,.85)";
+
+actx.lineWidth=3;
+
+actx.setLineDash([15,12]);
+
+actx.beginPath();
+
+actx.moveTo(
+analysisCanvas.width/2,
+0
+);
+
+actx.lineTo(
+analysisCanvas.width/2,
+analysisCanvas.height
+);
+
+actx.stroke();
+
+actx.restore();
+
+
+/* çiftler arasındaki çizgiler */
+
+for(let i=0;i<points.length;i+=2){
+
+if(points[i+1]){
+
+actx.beginPath();
+
+actx.moveTo(
+points[i].x,
+points[i].y
+);
+
+actx.lineTo(
+points[i+1].x,
+points[i+1].y
+);
+
+actx.strokeStyle="#ffd21e";
+
+actx.lineWidth=5;
+
+actx.stroke();
+
+}
+
+}
+
+
+/* noktalar */
+
+points.forEach((p,i)=>{
+
+actx.beginPath();
+
+actx.arc(
+p.x,
+p.y,
+11,
+0,
+Math.PI*2
+);
+
+actx.fillStyle="#00aaff";
+
+actx.fill();
+
+actx.lineWidth=3;
+
+actx.strokeStyle="white";
+
+actx.stroke();
+
+
+actx.fillStyle="white";
+
+actx.font="bold 22px Arial";
+
+actx.fillText(
+String(i+1),
+p.x+15,
+p.y-15
+);
+
+});
+
+
+if(points.length===8){
+
+calculateResults();
+
+}
+
+}
+
+
+/* ==============================
+   KOORDİNAT
+================================ */
+
+function pointerPosition(e){
+
+const rect=
+analysisCanvas.getBoundingClientRect();
+
+return{
+
+x:
+(e.clientX-rect.left)*
+analysisCanvas.width/
+rect.width,
+
+y:
+(e.clientY-rect.top)*
+analysisCanvas.height/
+rect.height
+
+};
+
+}
+
+
+/* ==============================
+   NOKTA EKLE / SÜRÜKLE
+================================ */
+
+analysisCanvas.addEventListener(
+"pointerdown",
+e=>{
+
+const pos=
+pointerPosition(e);
+
+
+/* var olan noktaya yakın mı? */
+
+dragging=
+points.findIndex(p=>
+Math.hypot(
+p.x-pos.x,
+p.y-pos.y
+)<35
+);
+
+
+if(dragging>=0){
+
+analysisCanvas
+.setPointerCapture(e.pointerId);
+
+return;
+
+}
+
+
+if(points.length<8){
+
+points.push(pos);
+
+drawAnalysis();
+
+updateStep();
+
+}
+
+});
+
+
+analysisCanvas.addEventListener(
+"pointermove",
+e=>{
+
+if(dragging<0)return;
+
+const pos=
+pointerPosition(e);
+
+points[dragging]=pos;
+
+drawAnalysis();
+
+});
+
+
+function endDrag(e){
+
+if(dragging>=0){
+
+try{
+analysisCanvas
+.releasePointerCapture(e.pointerId);
+}catch{}
+
+}
+
+dragging=-1;
+
+}
+
+
+analysisCanvas.addEventListener(
+"pointerup",
+endDrag
+);
+
+analysisCanvas.addEventListener(
+"pointercancel",
+endDrag
+);
+
+
+/* ==============================
+   ADIM
+================================ */
+
+function updateStep(){
+
+const el=
+document.getElementById("stepName");
+
+if(points.length<8){
+
+el.innerText=
+(points.length+1)+
+" / 8 • "+
+pointNames[points.length];
+
+}else{
+
+el.innerText=
+"✓ 8 NOKTA TAMAMLANDI";
+
+document.getElementById("results")
+.classList.remove("hidden");
+
+}
+
+}
+
+
+/* ==============================
+   AÇI
+================================ */
+
+function angle(a,b){
+
+let deg=
+Math.atan2(
+b.y-a.y,
+b.x-a.x
+)*
+180/
+Math.PI;
+
+if(deg>90)deg-=180;
+if(deg<-90)deg+=180;
+
+return deg;
+
+}
+
+
+function calculateResults(){
+
+const values=[
+
+angle(points[0],points[1]),
+angle(points[2],points[3]),
+angle(points[4],points[5]),
+angle(points[6],points[7])
+
+];
+
+writeResult(
+"head",
+values[0]
+);
+
+writeResult(
+"shoulder",
+values[1]
+);
+
+writeResult(
+"pelvis",
+values[2]
+);
+
+writeResult(
+"knee",
+values[3]
+);
+
+}
+
+
+function writeResult(id,value){
+
+document.getElementById(
+id+"Value"
+).innerText=
+Math.abs(value).toFixed(1)+"°";
+
+
+let text="Yaklaşık yatay";
+
+if(Math.abs(value)>=0.5){
+
+text=
+value>0
+?"Sağ taraf daha aşağıda"
+:"Sol taraf daha aşağıda";
+
+}
+
+document.getElementById(
+id+"Text"
+).innerText=text;
+
+}
+
+
+/* ==============================
+   GERİ AL / SIFIRLA
+================================ */
+
+document.getElementById("undoPoint")
+.onclick=()=>{
+
+points.pop();
+
+document.getElementById("results")
+.classList.add("hidden");
+
+drawAnalysis();
+
+updateStep();
+
+};
+
+
+document.getElementById("resetPoints")
+.onclick=()=>{
+
+points=[];
+
+document.getElementById("results")
+.classList.add("hidden");
+
+drawAnalysis();
+
+updateStep();
+
+};
+
+
+/* ==============================
+   ANALİZ TAMAM
+================================ */
+
+document.getElementById("analysisDone")
+.onclick=()=>{
+
+alert(
+"Ön postür analizi tamamlandı ✓\n\n"+
+"Sonraki sürümde Yan ve Arka analizlerini bağlayacağız."
+);
+
+};
+
+
+/* ==============================
+   ÇEKİMLERE DÖN
+================================ */
+
+document.getElementById("backCapture")
+.onclick=()=>{
+
+document.getElementById("analysisScreen")
+.classList.add("hidden");
+
+document.getElementById("captureScreen")
+.classList.remove("hidden");
+
+};
+
+
+window.addEventListener(
+"pagehide",
+closeCamera
+);
+
 </script>
 
 </body>
