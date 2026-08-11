@@ -2,7 +2,10 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+  />
   <meta name="theme-color" content="#0d141b" />
   <title>AG Postür</title>
 
@@ -60,7 +63,6 @@
       border-radius: 11px;
       padding: 0 12px;
       font-size: 16px;
-      margin-bottom: 12px;
     }
 
     button {
@@ -71,6 +73,7 @@
       font-size: 16px;
       font-weight: 700;
       margin-top: 10px;
+      cursor: pointer;
     }
 
     .primary {
@@ -81,6 +84,39 @@
     .dark {
       background: #293946;
       color: white;
+    }
+
+    .successBtn {
+      background: #1f7a45;
+      color: white;
+    }
+
+    .disabledBtn {
+      background: #26313a;
+      color: #6f7d88;
+      cursor: not-allowed;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .mode-btn {
+      margin-top: 0;
+      background: #293946;
+      color: white;
+    }
+
+    .mode-btn.active {
+      background: white;
+      color: #101820;
+    }
+
+    .mode-btn.done::after {
+      content: " ✓";
     }
 
     .camera-wrap {
@@ -99,6 +135,7 @@
 
     video {
       background: black;
+      object-fit: cover;
     }
 
     .overlay {
@@ -113,78 +150,104 @@
       bottom: 0;
       left: 50%;
       width: 2px;
-      background: rgba(47, 255, 108, .95);
+      background: rgba(47,255,108,.95);
       transform: translateX(-50%);
     }
 
-    .head {
+    .grid-line-v,
+    .grid-line-h {
       position: absolute;
-      top: 7%;
-      left: 36%;
-      right: 36%;
-      height: 12%;
+      background: rgba(255,255,255,.12);
+    }
+
+    .grid-line-v {
+      top: 0;
+      bottom: 0;
+      width: 1px;
+    }
+
+    .grid-line-h {
+      left: 0;
+      right: 0;
+      height: 1px;
+    }
+
+    .guide-line {
+      position: absolute;
+      height: 2px;
+      background: rgba(255,210,30,.95);
+    }
+
+    .guide-head {
+      position: absolute;
       border: 2px solid rgba(255,255,255,.8);
       border-radius: 50%;
     }
 
-    .shoulder,
-    .pelvis,
-    .knee,
-    .ground {
+    .body-left,
+    .body-right {
       position: absolute;
-      height: 2px;
-    }
-
-    .shoulder {
-      top: 27%;
-      left: 22%;
-      right: 22%;
-      background: rgba(255, 210, 30, .95);
-    }
-
-    .pelvis {
-      top: 49%;
-      left: 31%;
-      right: 31%;
-      background: rgba(255, 210, 30, .95);
-    }
-
-    .knee {
-      top: 72%;
-      left: 30%;
-      right: 30%;
-      background: rgba(255, 210, 30, .75);
-    }
-
-    .ground {
-      bottom: 5%;
-      left: 12%;
-      right: 12%;
-      background: rgba(255,255,255,.8);
+      border-left: 2px solid rgba(255,255,255,.38);
+      height: 65%;
+      top: 20%;
     }
 
     .status {
       margin-top: 12px;
       padding: 12px;
-      background: #22313d;
       border-radius: 12px;
+      background: #22313d;
       text-align: center;
       font-size: 14px;
       line-height: 1.4;
     }
 
-    .success {
+    .status-ok {
       background: #173424;
       color: #cdf7d7;
     }
 
-    .error {
-      background: #4a2527;
-      color: #ffd2d2;
+    .status-warn {
+      background: #4a3b1d;
+      color: #ffe9a9;
     }
 
     .hidden {
       display: none;
+    }
+
+    .preview-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .shots {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .shot-box {
+      background: #101820;
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+      min-width: 0;
+    }
+
+    .shot-box img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      border-radius: 9px;
+      background: #000;
+    }
+
+    .shot-label {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #a9b4bd;
     }
 
     .help {
@@ -202,19 +265,30 @@
 
   <div class="header">
     <div class="logo">AG POSTÜR</div>
-    <div class="sub">Canlı Kamera Testi • PWA V1</div>
+    <div class="sub">3 Yönlü Canlı Çekim • PWA V2</div>
   </div>
 
   <div class="card">
     <label>Danışan</label>
-    <input id="danisan" type="text" placeholder="Danışanın adını yaz" />
+
+    <input
+      id="danisan"
+      type="text"
+      placeholder="Danışanın adını yaz"
+    />
+
+    <div class="mode-grid">
+      <button class="mode-btn active" data-mode="on">ÖN</button>
+      <button class="mode-btn" data-mode="yan">YAN</button>
+      <button class="mode-btn" data-mode="arka">ARKA</button>
+    </div>
 
     <button id="kameraAc" class="primary">
       📷 Canlı Kamerayı Aç
     </button>
 
     <div class="help">
-      iPhone'da Safari üzerinden aç. Kamera izni sorulduğunda izin ver.
+      Her görünüş için ayrı fotoğraf çekeceğiz. Çekilen fotoğraf otomatik olarak o moda kaydedilir.
     </div>
   </div>
 
@@ -229,14 +303,7 @@
         muted>
       </video>
 
-      <div class="overlay">
-        <div class="center-line"></div>
-        <div class="head"></div>
-        <div class="shoulder"></div>
-        <div class="pelvis"></div>
-        <div class="knee"></div>
-        <div class="ground"></div>
-      </div>
+      <div id="overlay" class="overlay"></div>
 
     </div>
 
@@ -256,10 +323,52 @@
 
   <div id="previewCard" class="card hidden">
 
+    <div class="preview-title">
+      Çekilen Görüntü
+    </div>
+
     <canvas id="canvas"></canvas>
+
+    <button id="kullan" class="successBtn">
+      Bu Fotoğrafı Kullan
+    </button>
 
     <button id="yeniden" class="dark">
       Yeniden Çek
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <div class="preview-title">
+      Çekimler
+    </div>
+
+    <div class="shots">
+
+      <div class="shot-box">
+        <img id="shotOn" alt="Ön çekim" />
+        <div class="shot-label">ÖN</div>
+      </div>
+
+      <div class="shot-box">
+        <img id="shotYan" alt="Yan çekim" />
+        <div class="shot-label">YAN</div>
+      </div>
+
+      <div class="shot-box">
+        <img id="shotArka" alt="Arka çekim" />
+        <div class="shot-label">ARKA</div>
+      </div>
+
+    </div>
+
+    <button
+      id="analizeGec"
+      class="disabledBtn"
+      disabled>
+      3 FOTOĞRAF TAMAMLANINCA ANALİZE GEÇ
     </button>
 
   </div>
@@ -274,8 +383,114 @@
   const cameraCard = document.getElementById("cameraCard");
   const previewCard = document.getElementById("previewCard");
   const statusBox = document.getElementById("status");
+  const overlay = document.getElementById("overlay");
+  const analyzeButton = document.getElementById("analizeGec");
 
   let stream = null;
+  let currentMode = "on";
+  let pendingPhoto = null;
+
+  const photos = {
+    on: null,
+    yan: null,
+    arka: null
+  };
+
+  const labels = {
+    on: "Ön",
+    yan: "Yan",
+    arka: "Arka"
+  };
+
+  document.querySelectorAll(".mode-btn").forEach(button => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll(".mode-btn").forEach(btn => {
+        btn.classList.remove("active");
+      });
+
+      button.classList.add("active");
+      currentMode = button.dataset.mode;
+
+      if (stream) {
+        drawOverlay();
+      }
+    });
+  });
+
+  function drawOverlay() {
+    overlay.innerHTML = "";
+
+    addGrid();
+
+    const center = document.createElement("div");
+    center.className = "center-line";
+    overlay.appendChild(center);
+
+    if (currentMode === "on" || currentMode === "arka") {
+      drawFrontBackGuide();
+    } else {
+      drawSideGuide();
+    }
+  }
+
+  function addGrid() {
+    [20, 40, 60, 80].forEach(percent => {
+      const v = document.createElement("div");
+      v.className = "grid-line-v";
+      v.style.left = percent + "%";
+      overlay.appendChild(v);
+
+      const h = document.createElement("div");
+      h.className = "grid-line-h";
+      h.style.top = percent + "%";
+      overlay.appendChild(h);
+    });
+  }
+
+  function addLine(top, left, right) {
+    const line = document.createElement("div");
+    line.className = "guide-line";
+    line.style.top = top + "%";
+    line.style.left = left + "%";
+    line.style.right = right + "%";
+    overlay.appendChild(line);
+  }
+
+  function addHead(top, left, right, height) {
+    const head = document.createElement("div");
+    head.className = "guide-head";
+    head.style.top = top + "%";
+    head.style.left = left + "%";
+    head.style.right = right + "%";
+    head.style.height = height + "%";
+    overlay.appendChild(head);
+  }
+
+  function drawFrontBackGuide() {
+    addHead(6, 37, 37, 12);
+    addLine(27, 22, 22);
+    addLine(49, 31, 31);
+    addLine(72, 30, 30);
+    addLine(94, 12, 12);
+
+    const left = document.createElement("div");
+    left.className = "body-left";
+    left.style.left = "38%";
+    overlay.appendChild(left);
+
+    const right = document.createElement("div");
+    right.className = "body-right";
+    right.style.left = "62%";
+    overlay.appendChild(right);
+  }
+
+  function drawSideGuide() {
+    addHead(6, 41, 41, 12);
+    addLine(28, 40, 40);
+    addLine(50, 40, 40);
+    addLine(72, 40, 40);
+    addLine(94, 35, 35);
+  }
 
   async function kamerayiAc() {
     const danisan = document.getElementById("danisan").value.trim();
@@ -291,9 +506,7 @@
     }
 
     try {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
+      kamerayiKapat();
 
       stream = await navigator.mediaDevices.getUserMedia({
         audio: false,
@@ -307,24 +520,27 @@
       video.srcObject = stream;
       await video.play();
 
+      drawOverlay();
+
       cameraCard.classList.remove("hidden");
       previewCard.classList.add("hidden");
 
-      statusBox.className = "status success";
-      statusBox.innerText = "✓ Kamera açık — danışanı rehbere hizala.";
+      statusBox.className = "status status-ok";
+      statusBox.innerText =
+        "✓ " + labels[currentMode] + " çekim modu — danışanı rehbere hizala.";
     }
 
     catch (error) {
       console.error(error);
 
-      statusBox.className = "status error";
+      cameraCard.classList.remove("hidden");
+
+      statusBox.className = "status status-warn";
       statusBox.innerText =
-        "Kamera hatası: " +
+        "Kamera açılamadı: " +
         (error.name || "Bilinmeyen hata") +
         " — " +
         (error.message || "");
-
-      cameraCard.classList.remove("hidden");
     }
   }
 
@@ -361,6 +577,8 @@
       canvas.height
     );
 
+    pendingPhoto = canvas.toDataURL("image/jpeg", 0.9);
+
     previewCard.classList.remove("hidden");
     cameraCard.classList.add("hidden");
 
@@ -368,6 +586,90 @@
   });
 
   document.getElementById("yeniden").addEventListener("click", kamerayiAc);
+
+  document.getElementById("kullan").addEventListener("click", () => {
+    if (!pendingPhoto) {
+      alert("Önce fotoğraf çek.");
+      return;
+    }
+
+    photos[currentMode] = pendingPhoto;
+
+    if (currentMode === "on") {
+      document.getElementById("shotOn").src = pendingPhoto;
+    }
+
+    if (currentMode === "yan") {
+      document.getElementById("shotYan").src = pendingPhoto;
+    }
+
+    if (currentMode === "arka") {
+      document.getElementById("shotArka").src = pendingPhoto;
+    }
+
+    markModeDone(currentMode);
+
+    pendingPhoto = null;
+    previewCard.classList.add("hidden");
+
+    autoNextMode();
+    updateAnalyzeButton();
+  });
+
+  function markModeDone(mode) {
+    const button = document.querySelector('.mode-btn[data-mode="' + mode + '"]');
+
+    if (button) {
+      button.classList.add("done");
+    }
+  }
+
+  function autoNextMode() {
+    let nextMode = null;
+
+    if (!photos.on) {
+      nextMode = "on";
+    } else if (!photos.yan) {
+      nextMode = "yan";
+    } else if (!photos.arka) {
+      nextMode = "arka";
+    }
+
+    if (!nextMode) return;
+
+    currentMode = nextMode;
+
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+      btn.classList.toggle(
+        "active",
+        btn.dataset.mode === nextMode
+      );
+    });
+  }
+
+  function updateAnalyzeButton() {
+    const tamam =
+      photos.on &&
+      photos.yan &&
+      photos.arka;
+
+    if (tamam) {
+      analyzeButton.disabled = false;
+      analyzeButton.className = "successBtn";
+      analyzeButton.innerText = "ANALİZE GEÇ";
+    } else {
+      analyzeButton.disabled = true;
+      analyzeButton.className = "disabledBtn";
+      analyzeButton.innerText = "3 FOTOĞRAF TAMAMLANINCA ANALİZE GEÇ";
+    }
+  }
+
+  analyzeButton.addEventListener("click", () => {
+    alert(
+      "3 çekim tamamlandı ✓\n\n" +
+      "Sonraki sürümde burada anatomik nokta işaretleme ve açı hesaplama ekranına geçeceğiz."
+    );
+  });
 
   window.addEventListener("pagehide", kamerayiKapat);
 </script>
