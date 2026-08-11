@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#0d141b" />
+  <title>AG Postür</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #0d141b;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .app {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+
+    .header {
+      margin-bottom: 14px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .sub {
+      color: #91a0ab;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .card {
+      background: #18232d;
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      color: #a6b1ba;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      height: 48px;
+      border: none;
+      border-radius: 11px;
+      padding: 0 12px;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      width: 100%;
+      min-height: 50px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .primary {
+      background: white;
+      color: #101820;
+    }
+
+    .dark {
+      background: #293946;
+      color: white;
+    }
+
+    .camera-wrap {
+      position: relative;
+      width: 100%;
+      background: black;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    video,
+    canvas {
+      width: 100%;
+      display: block;
+    }
+
+    video {
+      background: black;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .center-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: rgba(47, 255, 108, .95);
+      transform: translateX(-50%);
+    }
+
+    .head {
+      position: absolute;
+      top: 7%;
+      left: 36%;
+      right: 36%;
+      height: 12%;
+      border: 2px solid rgba(255,255,255,.8);
+      border-radius: 50%;
+    }
+
+    .shoulder,
+    .pelvis,
+    .knee,
+    .ground {
+      position: absolute;
+      height: 2px;
+    }
+
+    .shoulder {
+      top: 27%;
+      left: 22%;
+      right: 22%;
+      background: rgba(255, 210, 30, .95);
+    }
+
+    .pelvis {
+      top: 49%;
+      left: 31%;
+      right: 31%;
+      background: rgba(255, 210, 30, .95);
+    }
+
+    .knee {
+      top: 72%;
+      left: 30%;
+      right: 30%;
+      background: rgba(255, 210, 30, .75);
+    }
+
+    .ground {
+      bottom: 5%;
+      left: 12%;
+      right: 12%;
+      background: rgba(255,255,255,.8);
+    }
+
+    .status {
+      margin-top: 12px;
+      padding: 12px;
+      background: #22313d;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .success {
+      background: #173424;
+      color: #cdf7d7;
+    }
+
+    .error {
+      background: #4a2527;
+      color: #ffd2d2;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .help {
+      font-size: 13px;
+      color: #9da9b4;
+      line-height: 1.5;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="header">
+    <div class="logo">AG POSTÜR</div>
+    <div class="sub">Canlı Kamera Testi • PWA V1</div>
+  </div>
+
+  <div class="card">
+    <label>Danışan</label>
+    <input id="danisan" type="text" placeholder="Danışanın adını yaz" />
+
+    <button id="kameraAc" class="primary">
+      📷 Canlı Kamerayı Aç
+    </button>
+
+    <div class="help">
+      iPhone'da Safari üzerinden aç. Kamera izni sorulduğunda izin ver.
+    </div>
+  </div>
+
+  <div id="cameraCard" class="card hidden">
+
+    <div class="camera-wrap">
+
+      <video
+        id="video"
+        autoplay
+        playsinline
+        muted>
+      </video>
+
+      <div class="overlay">
+        <div class="center-line"></div>
+        <div class="head"></div>
+        <div class="shoulder"></div>
+        <div class="pelvis"></div>
+        <div class="knee"></div>
+        <div class="ground"></div>
+      </div>
+
+    </div>
+
+    <div id="status" class="status">
+      Kamera hazırlanıyor...
+    </div>
+
+    <button id="fotoCek" class="primary">
+      FOTOĞRAFI ÇEK
+    </button>
+
+    <button id="kameraKapat" class="dark">
+      Kamerayı Kapat
+    </button>
+
+  </div>
+
+  <div id="previewCard" class="card hidden">
+
+    <canvas id="canvas"></canvas>
+
+    <button id="yeniden" class="dark">
+      Yeniden Çek
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+  const video = document.getElementById("video");
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  const cameraCard = document.getElementById("cameraCard");
+  const previewCard = document.getElementById("previewCard");
+  const statusBox = document.getElementById("status");
+
+  let stream = null;
+
+  async function kamerayiAc() {
+    const danisan = document.getElementById("danisan").value.trim();
+
+    if (!danisan) {
+      alert("Önce danışan adını yaz.");
+      return;
+    }
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert("Bu tarayıcı canlı kamera erişimini desteklemiyor.");
+      return;
+    }
+
+    try {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        }
+      });
+
+      video.srcObject = stream;
+      await video.play();
+
+      cameraCard.classList.remove("hidden");
+      previewCard.classList.add("hidden");
+
+      statusBox.className = "status success";
+      statusBox.innerText = "✓ Kamera açık — danışanı rehbere hizala.";
+    }
+
+    catch (error) {
+      console.error(error);
+
+      statusBox.className = "status error";
+      statusBox.innerText =
+        "Kamera hatası: " +
+        (error.name || "Bilinmeyen hata") +
+        " — " +
+        (error.message || "");
+
+      cameraCard.classList.remove("hidden");
+    }
+  }
+
+  function kamerayiKapat() {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+
+    video.srcObject = null;
+  }
+
+  document.getElementById("kameraAc").addEventListener("click", kamerayiAc);
+
+  document.getElementById("kameraKapat").addEventListener("click", () => {
+    kamerayiKapat();
+    cameraCard.classList.add("hidden");
+  });
+
+  document.getElementById("fotoCek").addEventListener("click", () => {
+    if (!video.videoWidth || !video.videoHeight) {
+      alert("Kamera henüz hazır değil.");
+      return;
+    }
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    ctx.drawImage(
+      video,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    previewCard.classList.remove("hidden");
+    cameraCard.classList.add("hidden");
+
+    kamerayiKapat();
+  });
+
+  document.getElementById("yeniden").addEventListener("click", kamerayiAc);
+
+  window.addEventListener("pagehide", kamerayiKapat);
+</script>
+
+</body>
+</html>
